@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand — Nigerian green */
+  --color-naija-50: #eefbf2;
+  --color-naija-100: #d5f5e0;
+  --color-naija-200: #aeeac4;
+  --color-naija-300: #77d79f;
+  --color-naija-400: #3fbc77;
+  --color-naija-500: #1ba05c;
+  --color-naija-600: #0f8049;
+  --color-naija-700: #0d663c;
+  --color-naija-800: #0d5132;
+  --color-naija-900: #0b432b;
+
+  /* Ground — warm-leaning dark, so surfaces don't read clinical */
+  --color-ink-950: #0c1310;
+  --color-ink-900: #121c17;
+  --color-ink-800: #1b2a22;
+  --color-ink-700: #26382e;
+  --color-ink-600: #354b3f;
+
+  /* Warm neutrals */
+  --color-sand-25: #fbfaf9;
+  --color-sand-50: #f6f5f3;
+  --color-sand-100: #ecebe8;
+  --color-sand-200: #dedcd7;
+  --color-sand-300: #c2bfb8;
+  --color-sand-400: #9a968d;
+  --color-sand-500: #74706a;
+
+  /* Recognition accents — badges only, never UI chrome */
+  --color-gold-400: #f0b429;
+  --color-silver-400: #a8adb5;
+  --color-bronze-400: #b5763a;
+
+  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: #ffffff;
+    color: var(--color-ink-900);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-naija-500);
+    color: #fff;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-naija-500);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@utility container-x {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 80rem;
+  padding-inline: 1.25rem;
+
+  @media (width >= 768px) {
+    padding-inline: 2rem;
+  }
+  @media (width >= 1280px) {
+    padding-inline: 2.5rem;
+  }
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s var(--ease-out-soft),
+    transform 0.7s var(--ease-out-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal[data-shown="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Animated line under section eyebrows */
+@keyframes flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.flow-line {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-naija-500),
+    var(--color-gold-400),
+    var(--color-naija-500)
+  );
+  background-size: 200% 100%;
+  animation: flow 4s linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 42s linear infinite;
+}
+
+.grid-lines {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Map-ish contour texture for the geography sections */
+.contour {
+  background-image: radial-gradient(
+    circle at 50% 50%,
+    transparent 0,
+    transparent 38px,
+    rgba(255, 255, 255, 0.04) 38px,
+    rgba(255, 255, 255, 0.04) 39px,
+    transparent 39px
+  );
+  background-size: 96px 96px;
+}
+
+/* Phone mockup — hide scrollbars inside the frame */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
