@@ -84,10 +84,15 @@ export default function PreviewPage() {
                 looking at is the interface and the idea, published early so the
                 thinking can be argued with before it&apos;s expensive to change.
               </p>
+              <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-ink-900/65">
+                The <strong className="font-semibold">live feed</strong> goes
+                further: it runs the real ranking algorithm on seeded content, so
+                you can post, engage, and watch positions move.
+              </p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <Button href="/#waitlist">Join the waitlist</Button>
-                <Button href="/geography" variant="outline">
-                  How the geography works
+                <Button href="/feed">Open the live feed</Button>
+                <Button href="/#waitlist" variant="outline">
+                  Join the waitlist
                 </Button>
               </div>
             </div>

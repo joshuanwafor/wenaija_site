@@ -15,6 +15,7 @@ export const site = {
 export const nav = [
   { href: "/", label: "Home" },
   { href: "/product", label: "Product" },
+  { href: "/feed", label: "Live feed" },
   { href: "/preview", label: "Preview" },
   { href: "/geography", label: "Geography" },
   { href: "/about", label: "About" },
@@ -154,7 +155,7 @@ export const buildStatus: BuildPhase[] = [
   {
     phase: "02",
     title: "Web prototype",
-    body: "The public site and interface preview you're looking at now.",
+    body: "The public site, plus a working feed prototype running the real ranking algorithm on seeded content.",
     state: "active",
   },
   {

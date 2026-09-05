@@ -10,7 +10,8 @@ itself: there is no platform behind it yet, and the pages say so.
 |---|---|
 | `/` | Landing page — the thesis, the interface preview, build status, waitlist, FAQ |
 | `/product` | The four v1 pillars, and what's deliberately left out |
-| `/preview` | Interactive interface preview — switch feed tiers and watch the phone change |
+| `/preview` | Interface preview — switch feed tiers and watch the phone mock change |
+| `/feed` | **Working feed prototype** — the real ranking algorithm on seeded content |
 | `/geography` | The four-tier model, all 36 states + FCT, 774 LGAs by zone |
 | `/about` | Why the product exists, who it's for, how it's being built |
 | `/legal/*` | Privacy, Terms, Community Guidelines — honest placeholders |
@@ -18,16 +19,31 @@ itself: there is no platform behind it yet, and the pages say so.
 
 ## The prototype boundary
 
-There is no database, no accounts, no posts and no messages. What exists:
+There is no database, no accounts and no server-side state. What exists:
 
 - **Real** — the geography (`src/lib/geo.ts`), the waitlist endpoint with full
-  validation, every page, and the interface preview's interaction.
-- **Illustrative** — the posts, messages, profiles and badges in the preview
-  (`src/lib/preview-data.ts`). Labelled as such on the page itself.
+  validation, every page, and **the ranking engine** (`src/lib/feed/`), which
+  implements FR-01.9, FR-01.10, FR-01.11 and FR-06.4/06.6 exactly as specified.
+- **Seeded** — the 24-post corpus in `src/lib/feed/seed.ts` and the phone-mock
+  content in `src/lib/preview-data.ts`. Labelled as such in the UI.
 
-The preview is a faithful mock of the interface, not a client for a backend.
-When the API exists, the preview components become the reference for the real
-screens rather than something to throw away.
+`/feed` is a genuinely working client: scores are computed, time decay applies,
+thin tiers widen, engagement persists to `localStorage`, and posts composed
+offline queue and flush on reconnect. Only the server is missing. When the API
+exists, `src/lib/feed/ranking.ts` is the reference implementation to port —
+it is deliberately free of React and browser APIs for that reason.
+
+### What the working feed showed us
+
+Two things a spec review would not have caught:
+
+1. **Views dominate the score at realistic ratios.** With the PRD's weights, a
+   post with 3.4k views earns 340 from views against 376 from 94 saves —
+   passive viewing nearly matches the strongest intent signal. Worth revisiting
+   the 0.1 view weight before build.
+2. **Followed states can bury your home state.** FR-01.5 weights followed states
+   equally, so high-volume Lagos content outranks Enugu content in an Enugu
+   user's own State feed. Equal weighting may need to become proportional.
 
 ## Running it
 
@@ -73,7 +89,8 @@ src/
     api/waitlist/route.ts Validation + delivery
     layout.tsx  globals.css  robots.ts  sitemap.ts  not-found.tsx
   components/
-    AppPreview.tsx        The interactive tier-switching preview
+    feed/                 The working feed: FeedApp, PostCard, Composer
+    AppPreview.tsx        The phone-frame tier-switching preview
     PhoneFrame.tsx        360px device frame
     WaitlistForm.tsx      Client form with honeypot + optimistic states
     Header.tsx  Footer.tsx  PageHero.tsx  Logo.tsx  Reveal.tsx
@@ -81,7 +98,12 @@ src/
   lib/
     site.ts               All page copy and content data
     geo.ts                States, LGA counts, zones — reference data
-    preview-data.ts       Mock feed/chat/profile content
+    preview-data.ts       Mock content for the phone-frame preview
+    feed/
+      ranking.ts          Scoring, decay, tier matching — pure, portable
+      store.ts            React state + localStorage + feed assembly
+      seed.ts             24-post seeded corpus
+      types.ts
 ```
 
 **Content lives in `src/lib/site.ts`,** not in the pages. Change copy there.

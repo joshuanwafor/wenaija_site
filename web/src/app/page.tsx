@@ -44,9 +44,9 @@ export default function HomePage() {
 
               <Reveal delay={120}>
                 <div className="mt-9 flex flex-wrap items-center gap-3">
-                  <Button href="#waitlist">Join the waitlist</Button>
-                  <Button href="/preview" variant="ghost">
-                    See the interface
+                  <Button href="/feed">Try the live feed</Button>
+                  <Button href="#waitlist" variant="ghost">
+                    Join the waitlist
                   </Button>
                 </div>
               </Reveal>
@@ -178,13 +178,28 @@ export default function HomePage() {
             <SectionHeading
               eyebrow="Interface preview"
               title="Try the idea before it exists"
-              lede="This is a working preview of the interface — the geography is real, the content is illustrative. Switch tiers and watch the feed change."
+              lede="A preview of the interface — the geography is real, the content is illustrative. Switch tiers and watch the feed change."
               align="center"
             />
           </Reveal>
           <Reveal delay={120}>
             <div className="mt-16">
               <AppPreview />
+            </div>
+          </Reveal>
+          <Reveal delay={180}>
+            <div className="mx-auto mt-14 max-w-2xl rounded-2xl border border-naija-600/20 bg-naija-50 p-7 text-center">
+              <h3 className="font-display text-xl font-semibold text-ink-900">
+                Want the real thing?
+              </h3>
+              <p className="mx-auto mt-3 max-w-lg text-[15px] leading-relaxed text-ink-900/65">
+                There&apos;s a working version of the feed with the actual
+                ranking algorithm running — post, save, switch tiers, go offline,
+                and inspect the maths behind every position.
+              </p>
+              <div className="mt-6 flex justify-center">
+                <Button href="/feed">Open the live feed</Button>
+              </div>
             </div>
           </Reveal>
         </div>
