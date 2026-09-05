@@ -71,16 +71,21 @@ should be tied to those, not to the calendar alone.
 
 ## New — from the web-first rewrite 🔺
 
-### OQ-6 — Object storage and CDN provider
-**Owner:** Eng · **Blocks:** M2 (media pipeline)
+### OQ-6 — AWS region for storage and API
+**Owner:** Eng · **Blocks:** M2 (media pipeline) · **Partially resolved**
 
-Which object storage and CDN, and is media served from a Nigerian or
-nearest-region edge?
+**Resolved:** the provider is AWS — S3 for objects, CloudFront for delivery.
+See [Accounts & Services](../03-engineering/accounts-and-services.md).
+
+**Still open:** which region, and whether it satisfies NDPA transfer
+requirements.
 
 *Why it matters:* media delivery latency is the dominant term in feed performance
-(NFR-7), and edge location largely determines it. It also has an NDPA dimension —
-where Nigerian users' media physically resides affects the transfer analysis in
-NFR-11. This blocks M2 and has a long procurement tail; start it in M0.
+(NFR-7). The working assumption is `eu-west-1`/`eu-west-2` over `af-south-1`,
+because Nigeria's cable routes land in Europe — but that should be measured from
+a Nigerian connection, not assumed. The region is also where personal data
+physically rests, which feeds the NFR-11 transfer analysis and
+[OQ-13](#oq-13--data-protection-accountability).
 
 ---
 
@@ -218,8 +223,10 @@ record against.
 Two dependencies in [PRD §6.2](prd-v1-web.md#62-external-dependencies) have no
 redundancy:
 
-- **Transactional email** — a single provider outage blocks password reset for
-  every user. Second provider before launch?
+- **Transactional email** — ZeptoMail is the only provider, so an outage blocks
+  password reset for every user. AWS SES is the obvious secondary since the AWS
+  account already exists; note SES starts sandboxed and production access takes
+  time to request.
 - **OTP SMS** — Nigerian carrier deliverability varies enough that a single
   gateway is a real availability risk. The PRD assumes Africa's Talking alone.
 

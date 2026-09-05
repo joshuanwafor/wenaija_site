@@ -119,10 +119,14 @@ it server-side, so nothing is lost in development. To deliver by email, copy
 `.env.example` to `.env.local` and fill in:
 
 ```
-RESEND_API_KEY=
-WAITLIST_FROM_EMAIL="WeNaija <waitlist@wenaija.ng>"
+ZEPTOMAIL_TOKEN=
+ZEPTOMAIL_FROM_ADDRESS="WeNaija <no-reply@wenaija.ng>"
 WAITLIST_TO_EMAIL=hello@wenaija.ng
 ```
+
+ZeptoMail requires the sending domain to be verified (SPF/DKIM) and the account
+to pass review before it will send anything — start that early. Full setup:
+[`docs/03-engineering/accounts-and-services.md`](docs/03-engineering/accounts-and-services.md).
 
 **Before launch this should write to a database rather than an inbox** — an
 email-only waitlist has no deduplication and no way to segment by state, which

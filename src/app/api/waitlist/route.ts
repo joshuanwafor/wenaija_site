@@ -14,6 +14,12 @@ type Payload = {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+/** Accepts either "addr@host" or "Name <addr@host>" and returns the address. */
+function parseAddress(value: string): string {
+  const match = value.match(/<([^>]+)>/);
+  return (match ? match[1] : value).trim();
+}
+
 export async function POST(request: Request) {
   let data: Payload;
 
@@ -66,31 +72,34 @@ export async function POST(request: Request) {
     receivedAt: new Date().toISOString(),
   };
 
-  const apiKey = process.env.RESEND_API_KEY;
+  const token = process.env.ZEPTOMAIL_TOKEN;
   const to = process.env.WAITLIST_TO_EMAIL ?? site.email;
-  const from = process.env.WAITLIST_FROM_EMAIL;
+  const from = process.env.ZEPTOMAIL_FROM_ADDRESS;
 
   // No mail provider configured yet — the backend is still being built, so the
-  // signup is logged server-side rather than dropped. Set RESEND_API_KEY and
-  // WAITLIST_FROM_EMAIL to deliver by email. See README.
-  if (!apiKey || !from) {
+  // signup is logged server-side rather than dropped. Set ZEPTOMAIL_TOKEN and
+  // ZEPTOMAIL_FROM_ADDRESS to deliver by email. See README.
+  if (!token || !from) {
     console.info("[waitlist] signup received (no mail provider configured)", signup);
     return NextResponse.json({ ok: true, delivered: false });
   }
 
   try {
-    const res = await fetch("https://api.resend.com/emails", {
+    // ZeptoMail's send token is used verbatim as the Authorization header —
+    // it already carries its own "Zoho-enczapikey " prefix, so don't add one.
+    const res = await fetch("https://api.zeptomail.com/v1.1/email", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: token,
         "Content-Type": "application/json",
+        Accept: "application/json",
       },
       body: JSON.stringify({
-        from,
-        to: [to],
-        reply_to: email,
+        from: { address: parseAddress(from), name: "WeNaija" },
+        to: [{ email_address: { address: to } }],
+        reply_to: [{ address: email, name }],
         subject: `WeNaija waitlist — ${name} (${state})`,
-        text: [
+        textbody: [
           `Name:  ${signup.name}`,
           `Email: ${signup.email}`,
           `State: ${signup.state}`,

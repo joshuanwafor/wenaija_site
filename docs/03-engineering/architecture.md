@@ -46,7 +46,7 @@ service later, the seam is already there.
                         │                       │
                         └───────────┬───────────┘
                                     ▼
-                    Africa's Talking · FCM · SendGrid/Zoho
+                Africa's Talking · FCM · ZeptoMail
 ```
 
 ---
@@ -119,9 +119,9 @@ Separate processes, same codebase, BullMQ over Redis.
 
 | Store | Role |
 |---|---|
-| **MongoDB** | Everything durable. [ADR-0002](../04-decisions/0002-mongodb-primary-store.md) |
-| **Redis** | Ranked tier feeds (ZSET), session/presence, rate limits, dedupe, queues, counters. [ADR-0004](../04-decisions/0004-redis-ranked-feeds.md) |
-| **Object storage + CDN** | Media. Provider unchosen — [OQ-6](../01-product/open-questions.md) |
+| **MongoDB Atlas** | Everything durable, hosted on AWS in the API's region. [ADR-0002](../04-decisions/0002-mongodb-primary-store.md) |
+| **Redis (ElastiCache)** | Ranked tier feeds (ZSET), session/presence, rate limits, dedupe, queues, counters. [ADR-0004](../04-decisions/0004-redis-ranked-feeds.md) |
+| **AWS S3 + CloudFront** | Media storage and delivery. See [Accounts & Services](accounts-and-services.md) |
 
 **Redis holds no source of truth.** Every ZSET, counter and presence key is
 reconstructible from Mongo. A Redis flush is a performance event, not a data-loss
@@ -227,9 +227,12 @@ without a deploy is an incident waiting to happen.
 | **staging** | Production topology at minimum size; seeded with realistic geo distribution |
 | **production** | ≥2 API instances behind a load balancer; workers scaled per queue; managed Mongo with replica set; managed Redis with persistence; CDN in front of everything static |
 
-**Region.** Nearest-region to Nigeria for API and data, with CDN edges closer.
-Media residency has an NDPA dimension ([OQ-6](../01-product/open-questions.md)) —
-decide it deliberately rather than by default.
+**Region.** `eu-west-1` or `eu-west-2` for API and data — Nigeria's submarine
+cable routes land in Europe, so those usually beat `af-south-1` from Lagos
+despite the map. CloudFront has a Lagos edge, which is what governs perceived
+media speed. Measure from a Nigerian connection before committing; the region is
+expensive to change later, and it is also an NDPA data-transfer decision. Detail
+in [Accounts & Services](accounts-and-services.md).
 
 Detail in [Environments & Deployment](environments-and-deployment.md).
 

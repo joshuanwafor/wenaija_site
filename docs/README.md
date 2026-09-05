@@ -49,6 +49,7 @@ and are enough to have an informed opinion about the plan.
 | [Notifications](03-engineering/notifications.md) | Three-layer routing, batching, non-disableable channels. |
 | [Security & Privacy](03-engineering/security-privacy-compliance.md) | AuthN/Z, 2FA, NDPA compliance, data retention. |
 | [Content Moderation & Trust](03-engineering/moderation-and-trust.md) | Reporting, review queue, enforcement ladder. **Gap in source PRD.** |
+| [Accounts & Services](03-engineering/accounts-and-services.md) | Every third-party account to open, in dependency order, with the secrets each produces. |
 | [Environments & Deployment](03-engineering/environments-and-deployment.md) | Environments, CI/CD, observability, runbooks. |
 | [Engineering Conventions](03-engineering/conventions.md) | Repo layout, branching, testing strategy, definition of done. |
 

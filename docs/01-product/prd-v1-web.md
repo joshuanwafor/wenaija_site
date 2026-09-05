@@ -176,9 +176,10 @@ advertisers, and Pro subscribers become relevant once v2 ships. Detail in
 |---|---|---|
 | Africa's Talking SMS gateway | OTP delivery, undelivered-message SMS relay | OTP has a secondary provider; relay degrades silently to push-only |
 | Firebase Cloud Messaging | Web push notifications | Degrades to in-app only; no user-visible error |
-| SendGrid / Zoho Mail | Transactional email (account alerts, password reset) | Blocks password reset — needs a secondary provider before launch |
+| ZeptoMail (Zoho) | Transactional email (account alerts, password reset) | Blocks password reset — single provider today, secondary needed before launch ([OQ-14](open-questions.md)) |
 | Google Sign-In (OAuth) | Optional social auth at signup | Optional path; phone/OTP always available |
-| Object storage + CDN | Media storage and delivery | Hard dependency. Provider not yet chosen — [OQ-6](open-questions.md) |
+| AWS (S3 + CloudFront) | Media storage and delivery | Hard dependency. Region choice carries an NDPA transfer question — see [Accounts & Services](../03-engineering/accounts-and-services.md) |
+| MongoDB Atlas (on AWS) | Primary datastore | Hard dependency. Production requires M10+ for backups |
 
 ---
 
@@ -691,7 +692,7 @@ Tracked with owners in [Open Questions](open-questions.md). Summary:
 | OQ-3 | What retention/engagement threshold triggers the start of v2 development? |
 | OQ-4 | Should v2 sequence calls, marketplace, and monetization together, or stage them? |
 | OQ-5 | What is the review cadence for badge/ranking gaming resistance? |
-| OQ-6 🔺 | Which object storage and CDN provider, and is media served from a Nigerian or nearest-region edge? |
+| OQ-6 🔺 | *Provider resolved: AWS S3 + CloudFront.* Which region, and does it satisfy NDPA transfer requirements? |
 | OQ-7 🔺 | Where does canonical Town/City reference data come from? LGAs are official (774); towns are not. |
 | OQ-8 🔺 | What is the SMS relay threshold, per-user daily cap, and monthly budget ceiling? |
 | OQ-9 🔺 | Is chat E2E encryption a v2 commitment or a permanent non-goal? It constrains the v1 data model either way. |
